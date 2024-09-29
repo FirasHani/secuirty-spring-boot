@@ -13,7 +13,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 public class ApplicationConfig {
 
     private final UserRepository repository;
-    private String test;
+
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> repository.findByEmail(username)
