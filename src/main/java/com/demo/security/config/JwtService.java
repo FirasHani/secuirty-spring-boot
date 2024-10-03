@@ -34,16 +34,17 @@ public class JwtService {
     }
 
     public String generateToken(
-          Map<String, Object> extraClaims,
-          UserDetails userDetails
+            Map<String, Object> extraClaims,
+            UserDetails userDetails
     ) {
-    return Jwts
-            .builder()
-            .setClaims(extraClaims)
-            .setSubject(userDetails.getUsername())
-            .setIssuedAt(new Date(System.currentTimeMillis()+1000*60*24))
-            .signWith(getSignInKey(), SignatureAlgorithm.HS256)
-            .compact();
+        return Jwts
+                .builder()
+                .setClaims(extraClaims)
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24)) // set expiration time
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .compact();
     }
 
     public boolean isTokenValid(String token,UserDetails userDetails) {
@@ -52,7 +53,8 @@ public class JwtService {
     }
 
     private boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
+        Date expiration = extractExpiration(token);
+        return expiration != null && expiration.before(new Date());
     }
 
     private Date extractExpiration(String token) {
