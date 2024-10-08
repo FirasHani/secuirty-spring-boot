@@ -1,6 +1,7 @@
 package com.demo.security.demo;
 
 
+import com.demo.security.config.JwtService;
 import com.demo.security.user.User;
 import com.demo.security.user.UserRepository;
 import jakarta.transaction.Transactional;
@@ -13,12 +14,13 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class DemoController {
 
+    private final JwtService jwtService;
+    private final DemoService demoService;
+
     @GetMapping
-    public ResponseEntity<String> sayHello() {
-        return ResponseEntity.ok("Hello World!");
+    public ResponseEntity<DemoResponse> sayHello(@RequestHeader("Authorization") String authHeader) {
+
+        return ResponseEntity.ok(demoService.getDemoResponse(authHeader));
     }
-    private final UserRepository userRepository;
-
-
 
 }
